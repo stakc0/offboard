@@ -9,7 +9,7 @@
   $$('[data-nav]').forEach(a => a.classList.toggle('on', a.dataset.nav === 'launch'));
 
   const DESTINATIONS = [
-    ['Democratic Party', 'https://democrats.org', 'D'], ['Republican Party', 'https://gop.com', 'R'],
+    ['Democratic Party', 'https://democrats.org', 'D'], ['Offboardublican Party', 'https://gop.com', 'R'],
     ['Fairshake', 'https://www.fairshakepac.com', 'F'], ['Sentinel Action Fund', 'https://sentinelactionfund.com', 'S'],
     ['Protect Progress', 'https://protectprogresspac.com', 'P'], ['Future Forward', 'https://futureforwardusa.org', 'F'],
     ['NRCC', 'https://www.nrcc.org', 'N'], ['Defend American Jobs', 'https://defendamericanjobs.com', 'D'],
@@ -128,7 +128,7 @@
       if (!steps[0]?.transaction) throw Error('No Pump V2 transaction was prepared.');
       if (!window.solanaWeb3) await new Promise((ok,no)=>{const s=document.createElement('script');s.src='https://unpkg.com/@solana/web3.js@1.98.2/lib/index.iife.min.js';s.onload=ok;s.onerror=no;document.head.appendChild(s);});
       for (const step of steps) { const tx=window.solanaWeb3.VersionedTransaction.deserialize(Uint8Array.from(atob(step.transaction),c=>c.charCodeAt(0))); $('#dep').innerHTML=`<div class="msg">approve ${step.phase==='buy'?'the initial buy':'the token creation'} in your wallet…</div>`; if(!w.p.signTransaction) throw Error('This wallet cannot sign the launch transaction.'); const signed=await w.p.signTransaction(tx); const encoded=btoa(String.fromCharCode(...signed.serialize())); const confirmed=await fetch('/api/deploy-confirm',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({intentId:prepared.intentId,phase:step.phase,transaction:encoded})}).then(async r=>{const raw=await r.text();let j;try{j=JSON.parse(raw);}catch{throw Error(raw.slice(0,180)||'Launch confirmation returned an invalid response.');}if(!r.ok)throw Error(j.error||'Launch confirmation failed.');return j;}); if(confirmed.status!=='confirmed') throw Error('Launch is still confirming.'); }
-      $('#dep').innerHTML=`<div class="msg ok"><b>$${esc(symbol)} is live.</b><div class="cta" style="margin-top:10px"><a class="btn" href="/${esc(prepared.mint)}">open the political token page <span class="k">-&gt;</span></a><a class="br" href="https://pump.fun/coin/${esc(prepared.mint)}" target="_blank" rel="noopener">pump.fun</a></div><div style="margin-top:10px;font-size:12px">destination site: ${esc(domainSite)}<br>metadata: https://politic.fun/${esc(prepared.mint)}</div></div>`; toast('Political destination launch confirmed');
+      $('#dep').innerHTML=`<div class="msg ok"><b>$${esc(symbol)} is live.</b><div class="cta" style="margin-top:10px"><a class="btn" href="/${esc(prepared.mint)}">open the political token page <span class="k">-&gt;</span></a><a class="br" href="https://pump.fun/coin/${esc(prepared.mint)}" target="_blank" rel="noopener">pump.fun</a></div><div style="margin-top:10px;font-size:12px">destination site: ${esc(domainSite)}<br>metadata: https://offboard/${esc(prepared.mint)}</div></div>`; toast('Political destination launch confirmed');
     } catch (ex) { err(ex.message || 'Launch failed.'); $('#dep').innerHTML = `<div class="msg"><span class="red">${esc(ex.message || 'Launch failed.')}</span></div>`; } finally { b.disabled = false; b.innerHTML = 'launch <span class="k">-&gt;</span>'; }
   });
 })();

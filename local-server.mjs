@@ -29,9 +29,9 @@ async function handler(req,res){
     if(u.pathname.startsWith('/api/')) return callApi(req,res);
     const route=routes[u.pathname]|| (u.pathname.startsWith('/token/')?'token.html':u.pathname.slice(1));
     const file=safe('/'+route);
-    try{const info=await stat(file);if(info.isFile()){res.writeHead(200,{'content-type':MIME[path.extname(file)]||'application/octet-stream','cache-control':'no-cache'});return res.end(await readFile(file));}}catch{}
+    try{const info=await stat(file);if(info.isFile()){res.writeHead(200,{'content-type':MIME[path.extname(file)]||'application/octet-stream','cache-control':u.pathname.startsWith('/assets/')?'public, max-age=31536000, immutable':'no-cache'});return res.end(await readFile(file));}}catch{}
     res.writeHead(404,{'content-type':'text/plain'});res.end('Not found');
   }catch(error){res.writeHead(500,{'content-type':'application/json'});res.end(JSON.stringify({ok:false,error:error.message}));}
 }
-if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)) http.createServer(handler).listen(Number(process.env.PORT)||3000,'0.0.0.0',()=>console.log('OFFBOARD running on http://localhost:'+(process.env.PORT||3000)));
+if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)) http.createServer(handler).listen(Number(process.env.PORT)||3000,'0.0.0.0',()=>console.log('REP running on http://localhost:'+(process.env.PORT||3000)));
 export {handler};
