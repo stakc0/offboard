@@ -33,5 +33,5 @@ async function handler(req,res){
     res.writeHead(404,{'content-type':'text/plain'});res.end('Not found');
   }catch(error){res.writeHead(500,{'content-type':'application/json'});res.end(JSON.stringify({ok:false,error:error.message}));}
 }
-if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)) http.createServer(handler).listen(Number(process.env.PORT)||3000,'0.0.0.0',()=>console.log('REP running on http://localhost:'+(process.env.PORT||3000)));
+if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)) http.createServer(handler).listen(Number(process.env.PORT)||3000,'0.0.0.0',()=>console.log('OFFBOARD running on http://localhost:'+(process.env.PORT||3000)));
 export {handler};
